@@ -12,7 +12,7 @@ Streaming de dados do SQL Server, CDC e Apache Kafka usando Debezium.
 | **Diretório**               | **Descrição**                                                                                                                                                                                 |
 |-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **/scripts**                | Onde fica os scripts de criação dos recursos do banco como criar database, tabelas, commandos sql dentre outros.                                                                              |
-| **/workspace**              | Onde pode ser depositado os projetos de código fonte para testes em DES na ferramenta Jupyter ou Vscode attachado                                                                             |
+| **/src**                    | Onde pode ser depositado os projetos de código fonte para testes em DES na ferramenta Jupyter ou Vscode attachado                                                                             |
 | **docker-compose.yml**      | Arquivo responsável por subir um container da imagem do sqlserver mcr.microsoft.com/mssql/server:2019-latest e a imagem mcr.microsoft.com/sql-tools que roda os scripts da pasta `\scripts` |
 | **init-sqlserver-local.bat** | Arquivo BAT que inicializa o `docker-compose.yml` com as imagens dos serviços                                                                                                               |
 

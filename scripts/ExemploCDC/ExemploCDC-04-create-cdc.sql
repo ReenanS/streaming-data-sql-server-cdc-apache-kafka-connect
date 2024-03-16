@@ -1,5 +1,5 @@
--- Criar a base de dados de exemplo
-CREATE DATABASE ExemploCDC;
+-- Usar a base de dados criada
+USE ExemploCDC;
 GO
 
 -- Habilitar o CDC na base de dados
