@@ -1,0 +1,5 @@
+/.vs
+/bin
+/src/Poc.Debezium.Kafka/.vs/Poc.Debezium.Kafka
+/src/Poc.Debezium.Kafka/Poc.Debezium.Kafka.Consumer/bin/Debug/net6.0
+/src/Poc.Debezium.Kafka/Poc.Debezium.Kafka.Consumer/obj
