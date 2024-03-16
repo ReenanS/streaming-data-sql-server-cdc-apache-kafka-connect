@@ -24,3 +24,54 @@ services:
     volumes:
       - "./scripts/ExemploCDC:/tmp"
     command: /bin/bash ./tmp/ExemploCDC-00-init.sh
+
+  # Serviço para executar o Zookeeper
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    depends_on:
+      - sqlserver  # Dependência do SQL Server para garantir que ele esteja em execução
+    ports:
+      - 2181:2181  # Mapeamento da porta do host para a porta do Zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181  # Porta do cliente Zookeeper
+      ZOOKEEPER_TICK_TIME: 2000  # Tempo de tick do Zookeeper
+
+  # Serviço para executar o Kafka
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - sqlserver  # Dependência do SQL Server para garantir que ele esteja em execução
+      - zookeeper  # Dependência do Zookeeper para garantir que ele esteja em execução
+    ports:
+      - 9092:9092  # Mapeamento da porta do host para a porta do Kafka
+    environment:
+      KAFKA_BROKER_ID: 1  # ID do broker do Kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181  # Conexão com o Zookeeper
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092  # Listeners do Kafka
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT  # Nome do listener inter-broker
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Fator de replicação do tópico de offsets
+
+  # Serviço para executar o Kafka Connect (CDC)
+  connect:
+    image: cdc:latest  # Substitua "cdc:latest" pelo nome da sua imagem CDC
+    depends_on:
+      - sqlserver  # Dependência do SQL Server para garantir que ele esteja em execução
+      - zookeeper  # Dependência do Zookeeper para garantir que ele esteja em execução
+      - kafka  # Dependência do Kafka para garantir que ele esteja em execução
+    ports:
+      - 8083:8083  # Mapeamento da porta do host para a porta do Kafka Connect
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka:9092  # Servidores de bootstrap do Kafka Connect
+      CONNECT_REST_PORT: 8083  # Porta REST do Kafka Connect
+      CONNECT_GROUP_ID: connect-1  # ID do grupo do Kafka Connect
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-1-config  # Tópico de armazenamento de configuração
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-1-offsets  # Tópico de armazenamento de offsets
+      CONNECT_STATUS_STORAGE_TOPIC: connect-1-status  # Tópico de armazenamento de status
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter  # Conversor de chave
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter  # Conversor de valor
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1  # Fator de replicação do armazenamento de offsets
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1  # Fator de replicação do armazenamento de configuração
+      CONNECT_OFFSET_STORAGE_PARTITIONS: 1  # Partições do armazenamento de offsets
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1  # Fator de replicação do armazenamento de status
+      CONNECT_STATUS_STORAGE_PARTITIONS: 1  # Partições do armazenamento de status
+      CONNECT_REST_ADVERTISED_HOST_NAME: localhost  # Nome do host anunciado para o Kafka Connect
