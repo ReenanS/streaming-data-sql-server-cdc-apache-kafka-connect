@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # Serviço para executar o SQL Server
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    hostname: sqlserver
+    container_name: sqlserver
+    ports:
+      - "1433:1433"  # Mapeamento da porta do host para a porta do SQL Server    
+    environment:
+      MSSQL_SA_PASSWORD: "SuaSenhaSegura123"  # user and passowrd
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_AGENT_ENABLED: "true" # Habilita cdc
+
+  # Serviço para executar o script SQL de configuração do CDC
+  sqltools:
+    image: mcr.microsoft.com/mssql-tools
+    hostname: sqltools
+    container_name: sqltools
+    depends_on:
+      - sqlserver
+    volumes:
+      - "./scripts/ExemploCDC:/tmp"
+    command: /bin/bash ./tmp/ExemploCDC-00-init.sh
