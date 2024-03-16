@@ -4,8 +4,8 @@ using Poc.Debezium.Kafka.Consumer;
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        const string table = "dbo.Person";
-        const string serverName = "watcher-person";
+        const string table = "dbo.Pessoa";
+        const string serverName = "watcher-pessoa";
         const string topic = $"{serverName}.{table}";
         var consumerConfig = context.Configuration.GetSection("ConsumerConfig").Get<ConsumerConfig>();
         var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();

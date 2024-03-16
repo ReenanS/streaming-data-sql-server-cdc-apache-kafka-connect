@@ -1,0 +1,16 @@
+{
+    "name": "pessoa-connector",
+    "config": {
+        "connector.class" : "io.debezium.connector.sqlserver.SqlServerConnector",
+        "tasks.max" : "1",
+        "database.server.name" : "watcher-pessoa",
+        "database.hostname" : "sqlserver",
+        "database.port" : "1433",
+        "database.user" : "sa",
+        "database.password" : "SuaSenhaSegura123",
+        "database.dbname" : "ExemploCDC",
+        "table.whitelist": "dbo.Pessoa",
+        "database.history.kafka.bootstrap.servers" : "kafka:9092",
+        "database.history.kafka.topic": "dbhistory.Pessoa"
+    }
+  }
