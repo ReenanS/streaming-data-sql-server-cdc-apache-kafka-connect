@@ -12,7 +12,7 @@
         "database.names": "DBCN502",
         "database.password": "password@123456",
         "database.server.id": "202112020800",
-        "database.enctrypt": false,
+        "database.encrypt": false,
         "schema.history.internal": "io.debezium.storage.file.history.FileSchemaHistory",
         "schema.history.internal.file.filename": "./history.dat"
     }

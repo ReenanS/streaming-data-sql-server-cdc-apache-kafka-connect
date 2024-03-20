@@ -1,5 +1,4 @@
-version: '3.8'
-
+version: '2'
 services:
   # Serviço para executar o SQL Server
   sqlserver:
@@ -11,8 +10,9 @@ services:
     environment:
       MSSQL_SA_PASSWORD: password@123456  # user and passowrd
       ACCEPT_EULA: Y
+      TZ: America/Sao_Paulo
       MSSQL_PID: Developer
-      MSSQL_AGENT_ENABLED: true # Habilita cdc
+      MSSQL_AGENT_ENABLED: "True" # Habilita cdc
       MSSQL_TCP_PORT: 1433
       MSSQL_LCID: 1046
       MSSQL_COLLATION: Latin1_General_CI_AS
@@ -38,7 +38,6 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181  # Porta do cliente Zookeeper
       ZOOKEEPER_TICK_TIME: 2000  # Tempo de tick do Zookeeper
 
-  # Serviço para executar o Kafka
   kafka:
     image: confluentinc/cp-kafka:latest
     container_name: kafka    
@@ -52,7 +51,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Fator de replicação do tópico de offsets      
       KAFKA_ADVERTISED_LISTENERS: INTERNAL_CDC://kafka:9093,EXTERNAL://localhost:9092  # Listeners do Kafka
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL_CDC:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_LISTENERS: INTERNAL_CDC://0.0.0.0.:9093,EXTERNAL://0.0.0.0:9092
+      KAFKA_LISTENERS: INTERNAL_CDC://0.0.0.0:9093,EXTERNAL://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL_CDC  # Nome do listener inter-broker
 
   # Serviço para executar o Kafka Connect (CDC)
@@ -68,6 +67,6 @@ services:
     environment:
       BOOTSTRAP_SERVERS: kafka:9093  # Servidores de bootstrap do Kafka Connect
       GROUP_ID: 1  # ID do grupo do Kafka Connect
-      CONFIG_STORAGE_TOPIC: debezium_001_config  # Tópico de armazenamento de configuração
-      OFFSET_STORAGE_TOPIC: debezium_001_offsets  # Tópico de armazenamento de offsets
+      CONFIG_STORAGE_TOPIC: debezium_001_configs  # Tópico de armazenamento de configuração
+      OFFSET_STORAGE_TOPIC: debezium_001_offset  # Tópico de armazenamento de offsets
       STATUS_STORAGE_TOPIC: debezium_001_status  # Tópico de armazenamento de status
