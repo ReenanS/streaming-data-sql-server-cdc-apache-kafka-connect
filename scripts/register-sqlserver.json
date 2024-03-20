@@ -1,15 +1,19 @@
 {
-    "name": "sqlserver-connector",
+    "name": "cdc-local-sqlserver-conbe007-connector",
     "config": {
         "connector.class": "io.debezium.connector.sqlserver.SqlServerConnector",
+        "topic.prefix": "joaozinho",
+        "tasks.max": "1",
+        "database.server.name": "DBCN502",
+        "table.whitelist": "dbo.CONBE007",
         "database.hostname": "sqlserver",
         "database.port": "1433",
-        "database.user": "sa",
-        "database.password": "SuaSenhaSegura123",
-        "database.dbname": "ExemploCDC",
-        "database.server.name": "cdc-sqlserver",
-        "table.whitelist": "dbo.Pessoa",
-        "snapshot.mode": "initial",
-        "heartbeat.interval.ms": "1000"
+        "database.user": "SA",
+        "database.names": "DBCN502",
+        "database.password": "password@123456",
+        "database.server.id": "202112020800",
+        "database.enctrypt": false,
+        "schema.history.internal": "io.debezium.storage.file.history.FileSchemaHistory",
+        "schema.history.internal.file.filename": "./history.dat"
     }
 }

@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "b76582f2-07ec-494f-912f-7b61359ad933",
+		"name": "cdc-kafka-sqlserver-topic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createConnector",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"cdc-local-sqlserver-conbe007-connector\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\",\r\n        \"topic.prefix\": \"joaozinho\",\r\n        \"tasks.max\": \"1\",\r\n        \"database.server.name\": \"DBCN502\",\r\n        \"table.whitelist\": \"dbo.CONBE007\",\r\n        \"database.hostname\": \"sqlserver\",\r\n        \"database.port\": \"1433\",\r\n        \"database.user\": \"SA\",\r\n        \"database.names\": \"DBCN502\",\r\n        \"database.password\": \"password@123456\",\r\n        \"database.server.id\": \"202112020800\",\r\n        \"database.enctrypt\": false,\r\n        \"schema.history.internal\": \"io.debezium.storage.file.history.FileSchemaHistory\",\r\n        \"schema.history.internal.file.filename\": \"./history.dat\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "showConnectorStatus",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe007-connector/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"cdc-local-sqlserver-conbe007-connector",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteConnector",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe007-connector",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"connectors",
+						"cdc-local-sqlserver-conbe007-connector"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

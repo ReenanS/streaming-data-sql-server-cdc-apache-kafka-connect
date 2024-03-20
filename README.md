@@ -25,7 +25,7 @@ Para um efetivo sucesso em subir um container é necessário configurar algumas 
 
 - #### Environment imagem SqlServer
 ````properties
-MSSQL_SA_PASSWORD: "SuaSenhaSegura123"  # user and passowrd
+MSSQL_SA_PASSWORD: "password@123456"  # user and passowrd
 ACCEPT_EULA: "Y"
 MSSQL_PID: "Developer"
 MSSQL_AGENT_ENABLED: "true" # Habilita cdc
@@ -35,7 +35,7 @@ Obs:
 > como kafka connect
 - #### Volumes do mssqltools
 ````properties
-./scripts/ExemploCDC:/tmp
+./scripts/DBCN502:/tmp
 ````
 
 ---
@@ -53,7 +53,7 @@ Esse comando irá rodar o docker-compose.yml que por sua vez irá subir dois con
 * `mcr.microsoft.com/mssql/server:2019-latest`: container que contém o serviço de SqlServer;
 * `mcr.microsoft.com/sql-tools`: container que irá rodar os scripts `bash` na pasta `/tmp` que carrega os scripts de
   criação de database, tabelas, comandos DML e criação de CDC de tabelas para kafka connect. Exemplo disso seria o volume
-  `- ./scripts/ExemploCDC:/tmp` que cria uma base e uma tabema `ExemploCDC` e insere dados e posteriormente já cria um CDC para
+  `- ./scripts/DBCN502:/tmp` que cria uma base e uma tabema `DBCN502` e insere dados e posteriormente já cria um CDC para
   conectar a serviços externos como Kafka Connect.
 
 ---
