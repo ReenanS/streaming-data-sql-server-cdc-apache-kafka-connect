@@ -52,7 +52,9 @@ namespace Worker.Services
                     var consumeResult = consumer.Consume(stoppingToken);
                     var fixMessage = consumeResult.Message.Value;
 
-                    Console.WriteLine($"Mensagem recebida do tópico {topic}: {fixMessage}");
+
+                    Console.WriteLine($"Mensagem recebida do tópico {topic}");
+                    //Console.WriteLine($"Mensagem recebida do tópico {topic}: {fixMessage}");
 
                     // Adicionar trabalho à fila de tarefas
                     taskQueue.QueueBackgroundWorkItem(async (token) =>

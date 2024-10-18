@@ -6,127 +6,388 @@
 	},
 	"item": [
 		{
-			"name": "createConnector",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"cdc-local-sqlserver-conbe007-connector\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\",\r\n        \"topic.prefix\": \"joaozinho\",\r\n        \"tasks.max\": \"1\",\r\n        \"database.server.name\": \"DBCN502\",\r\n        \"table.whitelist\": \"dbo.CONBE007\",\r\n        \"database.hostname\": \"sqlserver\",\r\n        \"database.port\": \"1433\",\r\n        \"database.user\": \"SA\",\r\n        \"database.names\": \"DBCN502\",\r\n        \"database.password\": \"password@123456\",\r\n        \"database.server.id\": \"202112020800\",\r\n        \"database.encrypt\": false,\r\n        \"schema.history.internal\": \"io.debezium.storage.file.history.FileSchemaHistory\",\r\n        \"schema.history.internal.file.filename\": \"./history.dat\"\r\n    }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "CONBE007",
+			"item": [
+				{
+					"name": "createConnector - CONBE007",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"cdc-local-sqlserver-conbe007-connector\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\",\r\n        \"topic.prefix\": \"joaozinho\",\r\n        \"tasks.max\": \"1\",\r\n        \"database.server.name\": \"DBCN502\",\r\n        \"table.whitelist\": \"dbo.CONBE007\",\r\n        \"database.hostname\": \"sqlserver\",\r\n        \"database.port\": \"1433\",\r\n        \"database.user\": \"SA\",\r\n        \"database.names\": \"DBCN502\",\r\n        \"database.password\": \"password@123456\",\r\n        \"database.server.id\": \"202112020800\",\r\n        \"database.encrypt\": false,\r\n        \"schema.history.internal\": \"io.debezium.storage.file.history.FileSchemaHistory\",\r\n        \"schema.history.internal.file.filename\": \"./history.dat\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8083/connectors",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8083",
-					"path": [
-						"connectors"
-					]
+				{
+					"name": "showConnectorStatus - CONBE007",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe007-connector/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"cdc-local-sqlserver-conbe007-connector",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteConnector - CONBE007",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe007-connector",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"cdc-local-sqlserver-conbe007-connector"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "showConnectorStatus",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "CONBE008",
+			"item": [
+				{
+					"name": "createConnector - CONBE008",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"cdc-local-sqlserver-conbe008-connector\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\",\r\n        \"topic.prefix\": \"renanzinho\",\r\n        \"tasks.max\": \"1\",\r\n        \"database.server.name\": \"DBCN502\",\r\n        \"table.whitelist\": \"dbo.CONBE008\",\r\n        \"database.hostname\": \"sqlserver\",\r\n        \"database.port\": \"1433\",\r\n        \"database.user\": \"SA\",\r\n        \"database.names\": \"DBCN502\",\r\n        \"database.password\": \"password@123456\",\r\n        \"database.server.id\": \"202112020800\",\r\n        \"database.encrypt\": false,\r\n        \"schema.history.internal\": \"io.debezium.storage.file.history.FileSchemaHistory\",\r\n        \"schema.history.internal.file.filename\": \"./history.dat\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe007-connector/status",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8083",
-					"path": [
-						"connectors",
-						"cdc-local-sqlserver-conbe007-connector",
-						"status"
-					]
+				{
+					"name": "showConnectorStatus - CONBE008",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe008-connector/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"cdc-local-sqlserver-conbe008-connector",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteConnector - CONBE008",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe008-connector",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"cdc-local-sqlserver-conbe008-connector"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "deleteConnector",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "CONBE009",
+			"item": [
+				{
+					"name": "createConnector - CONBE009",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"cdc-local-sqlserver-conbe009-connector\",\r\n    \"config\": {\r\n        \"connector.class\": \"io.debezium.connector.sqlserver.SqlServerConnector\",\r\n        \"topic.prefix\": \"tiophon\",\r\n        \"tasks.max\": \"1\",\r\n        \"database.server.name\": \"DBCN502\",\r\n        \"table.whitelist\": \"dbo.CONBE009\",\r\n        \"database.hostname\": \"sqlserver\",\r\n        \"database.port\": \"1433\",\r\n        \"database.user\": \"SA\",\r\n        \"database.names\": \"DBCN502\",\r\n        \"database.password\": \"password@123456\",\r\n        \"database.server.id\": \"202112020800\",\r\n        \"database.encrypt\": false,\r\n        \"schema.history.internal\": \"io.debezium.storage.file.history.FileSchemaHistory\",\r\n        \"schema.history.internal.file.filename\": \"./history.dat\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe007-connector",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8083",
-					"path": [
-						"connectors",
-						"cdc-local-sqlserver-conbe007-connector"
-					]
+				{
+					"name": "showConnectorStatus - CONBE009",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe009-connector/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"cdc-local-sqlserver-conbe009-connector",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteConnector - CONBE009",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/connectors/cdc-local-sqlserver-conbe009-connector",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"connectors",
+								"cdc-local-sqlserver-conbe009-connector"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }
