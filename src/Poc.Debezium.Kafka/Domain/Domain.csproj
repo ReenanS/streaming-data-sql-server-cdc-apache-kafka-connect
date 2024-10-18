@@ -6,14 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Configurations\" />
-    <Folder Include="Interfaces\BackgroundTask\" />
-    <Folder Include="Interfaces\Facade\" />
-    <Folder Include="Interfaces\UseCases\" />
-    <Folder Include="Interfaces\Services\" />
-    <Folder Include="Models\" />
-    <Folder Include="UseCases\" />
-  </ItemGroup>
-
 </Project>
