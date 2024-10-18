@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Kafka.Configuration
 {
-    public class KCertConfiguration
+    public class KaaSCertConfiguration
     {
         public static readonly string DEFAULT_CONFIG_SECTION = "KaaSCert";
         public string CaCertLocation { get; set; }

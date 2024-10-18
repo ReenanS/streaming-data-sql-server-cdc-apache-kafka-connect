@@ -1,10 +1,5 @@
-﻿using Domain.Interfaces.UseCases;
-using Domain.UseCases;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Domain.Configurations
 {

@@ -1,18 +1,24 @@
-using Confluent.Kafka;
-using Poc.Debezium.Kafka.Consumer;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System.Diagnostics.CodeAnalysis;
 
-var host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices((context, services) =>
+namespace Worker
+{
+    public class Program
     {
-        const string table = "dbo.CONBE007";
-        const string serverName = "cdc-sqlserver";
-        //const string topic = $"{serverName}.{table}";
-        const string topic = $"joaozinho.DBCN502.dbo.CONBE007";
-        var consumerConfig = context.Configuration.GetSection("ConsumerConfig").Get<ConsumerConfig>();
-        var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
-        consumer.Subscribe(topic);
-        services.AddSingleton(_ => consumer);
-        services.AddHostedService<WorkerService>();
-    }).Build();
+        protected Program() { }
 
-await host.RunAsync();
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+
+    }
+}

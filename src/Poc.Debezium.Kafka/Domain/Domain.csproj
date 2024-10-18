@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Serilog" Version="4.0.2" />
+		<PackageReference Include="AWSSDK.StepFunctions" Version="3.7.402.22" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstrations" Version="8.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstrations" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+	</ItemGroup>	
+
 </Project>
