@@ -27,7 +27,7 @@ namespace Worker.Services
 
             this.kafkaConfiguration = kafkaConfiguration.Value;
 
-            InitializeKafkaConfiguration();
+            //InitializeKafkaConfiguration();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -54,6 +54,8 @@ namespace Worker.Services
 
                     JObject cdcMessage = JObject.Parse(fixMessage);
 
+                    Console.WriteLine(fixMessage);
+
                     taskQueue.QueueBackgroundWorkItem(async (token) =>
                     {
                         try
@@ -77,30 +79,6 @@ namespace Worker.Services
             {
                 consumer.Dispose();
             }
-        }
-
-        public void InitializeKafkaConfiguration()
-        {
-            consumerConfig = PopulateConsumerConfig();
-        }
-
-        private ConsumerConfig PopulateConsumerConfig()
-        {
-            var config = new ConsumerConfig()
-            {
-                BootstrapServers = kafkaConfiguration.DefaultBootstrapServer,
-                ClientId = kafkaConfiguration.ClientId,
-                SecurityProtocol = SecurityProtocol.Ssl,
-                SslCaLocation = "./Certifacates/CARoot.crt",
-                SslCertificateLocation = "./Certificates/RT70007-cert.pem",
-                SslKeyPassword = "Renan",
-                Debug = "security",
-                GroupId = kafkaConfiguration.GroupId,
-                EnableAutoCommit = false,
-                AutoOffsetReset = AutoOffsetReset.Earliest
-            };
-
-            return config;
         }
     }
 }

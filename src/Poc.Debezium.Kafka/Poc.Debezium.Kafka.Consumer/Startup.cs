@@ -48,12 +48,6 @@ namespace Worker
                 {
                     BootstrapServers = Configuration["Kafka:BootstrapServers"],
                     GroupId = Configuration["Kafka:GroupId"],
-                    AutoOffsetReset = AutoOffsetReset.Earliest,
-                    EnableAutoCommit = false,
-                    SecurityProtocol = SecurityProtocol.Ssl,
-                    SslCaLocation = "./Certificates/CARoot.crt",
-                    SslCertificateLocation = "./Certificates/RT70007-cert.pem",
-                    SslKeyPassword = "Renan"
                 };
 
                 return new ConsumerBuilder<string, string>(config).Build();

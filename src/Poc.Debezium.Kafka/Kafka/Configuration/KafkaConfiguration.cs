@@ -3,10 +3,10 @@
     public class KafkaConfiguration
     {
         public static readonly string DEFAULT_CONFIG_SECTION = "Kafka";
-        public string DefaultBootstrapServer { get; set; }
+        public string BootstrapServers { get; set; }
         public string Topic { get; set; }
         public string GroupId { get; set; }
-        public string ClientId { get; set; }
+        public string AutoOffsetReset { get; set; }
     }
 
     public class KafkaTopicSettings
