@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace Worker
 {
-    internal class Startup
+    public class Startup
     {
+        public Startup(IConfiguration configuration) 
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        public void ConfigureServices(IServiceCollection services) 
+        {
+        
+        }
     }
 }
