@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces.BackgroundTask
 {
-    internal class IBackgroundTaskQueue
+    public interface IBackgroundTaskQueue
     {
+        void QueueBackgroundWorkItem(Func<CancellationToken,Task> workItem);
+        Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken);
     }
 }
