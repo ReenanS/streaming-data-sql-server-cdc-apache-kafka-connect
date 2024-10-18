@@ -2,12 +2,12 @@ using Confluent.Kafka;
 using System.Text.Json;
 
 namespace Poc.Debezium.Kafka.Consumer;
-public class Worker : BackgroundService
+public class WorkerService : BackgroundService
 {
     private readonly IConsumer<string, string> _consumer;
-    private readonly ILogger<Worker> _logger;
+    private readonly ILogger<WorkerService> _logger;
 
-    public Worker(ILogger<Worker> logger, IConsumer<string, string> consumer)
+    public WorkerService(ILogger<WorkerService> logger, IConsumer<string, string> consumer)
     {
         _logger = logger;
         _consumer = consumer;

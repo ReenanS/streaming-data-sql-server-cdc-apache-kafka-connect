@@ -12,7 +12,7 @@ var host = Host.CreateDefaultBuilder(args)
         var consumer = new ConsumerBuilder<string, string>(consumerConfig).Build();
         consumer.Subscribe(topic);
         services.AddSingleton(_ => consumer);
-        services.AddHostedService<Worker>();
+        services.AddHostedService<WorkerService>();
     }).Build();
 
 await host.RunAsync();
