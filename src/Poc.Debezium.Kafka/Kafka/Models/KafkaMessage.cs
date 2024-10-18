@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Kafka.Models
+﻿namespace Kafka.Models
 {
     public class KafkaMessage
     {
-        public BeforeAfterData? before {  get; set; }
+        public BeforeAfterData? before { get; set; }
         public BeforeAfterData? after { get; set; }
-        public string op {  get; set; }
+        public string op { get; set; }
 
         public class BeforeAfterData
         {

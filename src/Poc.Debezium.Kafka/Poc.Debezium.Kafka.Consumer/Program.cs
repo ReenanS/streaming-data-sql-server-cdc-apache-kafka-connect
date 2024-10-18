@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Worker
 {

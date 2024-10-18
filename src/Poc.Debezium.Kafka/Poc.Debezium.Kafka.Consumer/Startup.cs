@@ -1,24 +1,14 @@
-﻿using Amazon.SecretsManager;
-using Amazon.StepFunctions;
+﻿using Confluent.Kafka;
 using Domain.Configurations;
 using Infra.Configurations;
 using Kafka.Configuration;
-using Kafka.Services;
-using Worker.BackgroundTask;
-using Worker.Configurations;
-using Worker.Extensions;
-using Worker.Services;
 using LocalStack.Client.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Exceptions;
-using Serilog.Formatting.Json;
-using System;
-using System.Diagnostics.CodeAnalysis;
+using Worker.BackgroundTask;
+using Worker.Configurations;
+using Worker.Services;
 
 namespace Worker
 {
@@ -37,40 +27,58 @@ namespace Worker
 
             Console.WriteLine(environment);
 
-            Log.Logger = new ILoggerProviderConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .Enrich.WithExceptionDetails()
-                .WriteTo.Console(new JsonFormatter())
-                .CreateLogger();
+            //Log.Logger = new ILoggerProviderConfiguration()
+            //    .ReadFrom.Configuration(Configuration)
+            //    .Enrich.WithExceptionDetails()
+            //    .WriteTo.Console(new JsonFormatter())
+            //    .CreateLogger();
 
             services.AddLocalStack(Configuration);
             services.AddSingleton(Log.Logger);
 
             services.AddInfra()
                 .AddKafka(Configuration)
-            .AddWorker()
-            .AddDomain();
+                .AddWorker()
+                .AddDomain();
 
-            services.AddAwsService<IAmazonSecretsManager>();
-            services.AddAwsService<IAmazonStepFunction>();
+            // Configuração do Kafka Consumer
+            services.AddSingleton<IConsumer<string, string>>(provider =>
+            {
+                var config = new ConsumerConfig
+                {
+                    BootstrapServers = Configuration["Kafka:BootstrapServers"],
+                    GroupId = Configuration["Kafka:GroupId"],
+                    AutoOffsetReset = AutoOffsetReset.Earliest,
+                    EnableAutoCommit = false,
+                    SecurityProtocol = SecurityProtocol.Ssl,
+                    SslCaLocation = "./Certificates/CARoot.crt",
+                    SslCertificateLocation = "./Certificates/RT70007-cert.pem",
+                    SslKeyPassword = "Renan"
+                };
 
-            services.AddHostedService<KCertGeneratorService>();
+                return new ConsumerBuilder<string, string>(config).Build();
+            });
+
+            //services.AddAwsService<IAmazonSecretsManager>();
+            //services.AddAwsService<IAmazonStepFunction>();
+
+            //services.AddHostedService<KCertGeneratorService>();
             services.AddHostedService<KafkaConsumerService>();
             services.AddHostedService<QueuedHostedService>();
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies);
-            services.AddHealthCheckService();
+            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies);
+            //services.AddHealthCheckService();
 
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if(env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.RegisterHealthCheck();
+            //app.RegisterHealthCheck();
         }
     }
 }
