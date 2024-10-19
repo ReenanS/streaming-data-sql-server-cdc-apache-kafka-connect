@@ -76,7 +76,7 @@ namespace Worker.Services
                     var input = new StepFunctionInput
                     {
                         TipoOperacao = operation,
-                        GroupId = id,
+                        CodigoExterno = id,
                         StateMachineArn = stateMachineArn // Passa o ARN aqui
                     };
 
@@ -87,10 +87,10 @@ namespace Worker.Services
                         {
                             using var scope = serviceProvider.CreateScope();
 
-                            //var sendOperationToStepFunctionAsync = scope.ServiceProvider.GetRequiredService<ISendOperationToStepFunction>();
+                            var sendOperationToStepFunctionAsync = scope.ServiceProvider.GetRequiredService<ISendOperationToStepFunction>();
 
                             // Chama o Step Function
-                            //await sendOperationToStepFunctionAsync.ExecuteAsync(input);
+                            await sendOperationToStepFunctionAsync.ExecuteAsync(input);
 
                             consumer.Commit(consumeResult);
                         }

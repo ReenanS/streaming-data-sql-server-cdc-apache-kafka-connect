@@ -59,7 +59,7 @@ namespace Worker
             services.AddAwsService<IAmazonStepFunctions>();
 
             // Registrar o KafkaConsumerManager
-            services.AddScoped<KafkaConsumerManager>();
+            //services.AddScoped<KafkaConsumerManager>();
 
             //services.AddHostedService<KCertGeneratorService>();
             services.AddHostedService<KafkaConsumerService>();

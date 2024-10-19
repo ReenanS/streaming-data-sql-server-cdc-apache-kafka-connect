@@ -25,7 +25,7 @@ namespace Domain.UseCases
             if (input == null) throw new ArgumentNullException(nameof(input));
             if (string.IsNullOrEmpty(input.StateMachineArn)) throw new ArgumentException("StateMachineArn não pode ser nulo ou vazio.", nameof(input.StateMachineArn));
 
-            logger.Information("Step Function Input - TipoOperacao: {tipoOperacao}, GroupId: {groupId}, StateMachineArn: {stateMachineArn}", input.TipoOperacao, input.GroupId, input.StateMachineArn);
+            logger.Information("Step Function Input - TipoOperacao: {tipoOperacao}, CodigoExterno: {codigoExterno}, StateMachineArn: {stateMachineArn}", input.TipoOperacao, input.CodigoExterno, input.StateMachineArn);
 
             var startExecutionRequest = new StartExecutionRequest
             {
@@ -34,7 +34,7 @@ namespace Domain.UseCases
             };
 
             var response = await amazonStepFunctions.StartExecutionAsync(startExecutionRequest);
-            logger.Information("Mensagem enviada para Step Function. ExecutionArn: {executionArn}, TipoOperacao: {tipoOperacao}, GroupId: {groupId}", response.ExecutionArn, input.TipoOperacao, input.GroupId);
+            logger.Information("Mensagem enviada para Step Function. ExecutionArn: {executionArn}, TipoOperacao: {tipoOperacao}, CodigoExterno: {codigoExterno}", response.ExecutionArn, input.TipoOperacao, input.CodigoExterno);
         }
     }
 }
