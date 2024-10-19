@@ -1,14 +1,11 @@
-﻿using Amazon.StepFunctions.Model;
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Domain.Interfaces.BackgroundTask;
 using Domain.Interfaces.UseCases;
 using Domain.Models;
-using Domain.UseCases;
 using Kafka.Configuration;
 using Kafka.Models;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Worker.Interfaces;
 
 namespace Worker.Services
@@ -71,9 +68,9 @@ namespace Worker.Services
 
                     // Usando a classe de processamento de mensagem
                     string operation = messageProcessor.ConvertOperation(kafkaMessage.Payload.Op);
-                    
+
                     //int id = messageProcessor.GetPrimaryKey(kafkaMessage.Payload, topic);
-                    
+
                     string stateMachineArn = kafkaConfiguration.Topics.FirstOrDefault(t => t.Topic == topic)?.StateMachineArn;
 
                     var input = new StepFunctionInput

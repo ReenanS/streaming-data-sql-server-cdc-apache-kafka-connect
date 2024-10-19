@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Kafka.Models;
-
-namespace Worker.Interfaces
+﻿namespace Worker.Interfaces
 {
     public interface IMessageProcessor
     {

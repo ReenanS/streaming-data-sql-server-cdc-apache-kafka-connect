@@ -1,9 +1,9 @@
-﻿using Domain.Models;
+﻿using Amazon.StepFunctions;
+using Amazon.StepFunctions.Model;
 using Domain.Interfaces.UseCases;
+using Domain.Models;
 using Serilog;
 using System.Text.Json;
-using Amazon.StepFunctions;
-using Amazon.StepFunctions.Model;
 
 namespace Domain.UseCases
 {
