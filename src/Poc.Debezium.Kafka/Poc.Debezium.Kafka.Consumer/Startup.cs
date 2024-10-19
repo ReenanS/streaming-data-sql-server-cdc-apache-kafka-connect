@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka;
+﻿using Amazon.StepFunctions;
+using Confluent.Kafka;
 using Domain.Configurations;
 using Infra.Configurations;
 using Kafka.Configuration;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using Worker.BackgroundTask;
 using Worker.Configurations;
+using Worker.Interfaces;
 using Worker.Services;
 
 namespace Worker
@@ -54,7 +56,7 @@ namespace Worker
             });
 
             //services.AddAwsService<IAmazonSecretsManager>();
-            //services.AddAwsService<IAmazonStepFunction>();
+            services.AddAwsService<IAmazonStepFunctions>();
 
             // Registrar o KafkaConsumerManager
             services.AddScoped<KafkaConsumerManager>();
@@ -65,6 +67,8 @@ namespace Worker
 
             //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies);
             //services.AddHealthCheckService();
+
+            services.AddSingleton<IMessageProcessor, MessageProcessor>();
 
         }
 

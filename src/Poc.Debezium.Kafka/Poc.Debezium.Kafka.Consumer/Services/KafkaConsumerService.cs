@@ -1,8 +1,15 @@
-﻿using Confluent.Kafka;
+﻿using Amazon.StepFunctions.Model;
+using Confluent.Kafka;
 using Domain.Interfaces.BackgroundTask;
+using Domain.Interfaces.UseCases;
+using Domain.Models;
+using Domain.UseCases;
 using Kafka.Configuration;
+using Kafka.Models;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Worker.Interfaces;
 
 namespace Worker.Services
 {
@@ -11,14 +18,17 @@ namespace Worker.Services
         private readonly IBackgroundTaskQueue taskQueue;
         private readonly IServiceScopeFactory serviceProvider;
         private readonly KafkaConfiguration kafkaConfiguration;
+        private readonly IMessageProcessor messageProcessor;
 
         public KafkaConsumerService(IServiceScopeFactory serviceProvider,
             IBackgroundTaskQueue taskQueue,
-            IOptions<KafkaConfiguration> kafkaConfiguration)
+            IOptions<KafkaConfiguration> kafkaConfiguration,
+            IMessageProcessor messageProcessor)
         {
             this.taskQueue = taskQueue;
             this.serviceProvider = serviceProvider;
             this.kafkaConfiguration = kafkaConfiguration.Value;
+            this.messageProcessor = messageProcessor;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -56,12 +66,35 @@ namespace Worker.Services
                     Console.WriteLine($"Mensagem recebida do tópico {topic}");
                     //Console.WriteLine($"Mensagem recebida do tópico {topic}: {fixMessage}");
 
+                    var kafkaMessage = JsonConvert.DeserializeObject<KafkaMessage>(fixMessage);
+                    if (kafkaMessage?.Payload == null) continue;
+
+                    // Usando a classe de processamento de mensagem
+                    string operation = messageProcessor.ConvertOperation(kafkaMessage.Payload.Op);
+                    
+                    //int id = messageProcessor.GetPrimaryKey(kafkaMessage.Payload, topic);
+                    
+                    string stateMachineArn = kafkaConfiguration.Topics.FirstOrDefault(t => t.Topic == topic)?.StateMachineArn;
+
+                    var input = new StepFunctionInput
+                    {
+                        TipoOperacao = operation,
+                        GroupId = 1,
+                        StateMachineArn = stateMachineArn // Passa o ARN aqui
+                    };
+
                     // Adicionar trabalho à fila de tarefas
                     taskQueue.QueueBackgroundWorkItem(async (token) =>
                     {
                         try
                         {
                             using var scope = serviceProvider.CreateScope();
+
+                            var sendOperationToStepFunctionAsync = scope.ServiceProvider.GetRequiredService<ISendOperationToStepFunction>();
+
+                            // Chama o Step Function
+                            await sendOperationToStepFunctionAsync.ExecuteAsync(input);
+
                             consumer.Commit(consumeResult);
                         }
                         catch (Exception ex)

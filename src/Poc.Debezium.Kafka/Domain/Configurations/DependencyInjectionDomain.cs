@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Domain.Interfaces.UseCases;
+using Domain.UseCases;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Domain.Configurations
 {
@@ -6,7 +8,7 @@ namespace Domain.Configurations
     {
         public static IServiceCollection AddDomain(this IServiceCollection services)
         {
-            //services.AddScoped<ISendOperationToStepFunction, SendOperationToStepFunction>();
+            services.AddScoped<ISendOperationToStepFunction, SendOperationToStepFunction>();
             return services;
         }
     }
