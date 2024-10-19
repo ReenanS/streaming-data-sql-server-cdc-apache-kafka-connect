@@ -4,7 +4,7 @@ GO
 
 -- Criar uma tabela de CONBE007
 CREATE TABLE CONBE007 (
-    ID INT IDENTITY(1,1) PRIMARY KEY,
+    ID_CONBE007 INT IDENTITY(1,1) PRIMARY KEY,
     Nome NVARCHAR(100),
     Sobrenome NVARCHAR(100),
     Email NVARCHAR(100)
@@ -12,7 +12,7 @@ CREATE TABLE CONBE007 (
 
 -- Criação da tabela CONBE008 - Telefone dos Clientes
 CREATE TABLE CONBE008 (
-    ID INT IDENTITY(1,1) PRIMARY KEY,  -- Chave primária com auto incremento
+    ID_CONBE008 INT IDENTITY(1,1) PRIMARY KEY,  -- Chave primária com auto incremento
     ClienteID INT NOT NULL,             -- ID do cliente (pode ser uma referência a outra tabela)
     Telefone VARCHAR(15) NOT NULL,      -- Telefone do cliente
     TipoTelefone VARCHAR(20) NOT NULL   -- Tipo de telefone (ex: celular, fixo)
@@ -20,7 +20,7 @@ CREATE TABLE CONBE008 (
 
 -- Criação da tabela CONBE009 - Endereço dos Clientes
 CREATE TABLE CONBE009 (
-    ID INT IDENTITY(1,1) PRIMARY KEY,   -- Chave primária com auto incremento
+    ID_CONBE009 INT IDENTITY(1,1) PRIMARY KEY,   -- Chave primária com auto incremento
     ClienteID INT NOT NULL,              -- ID do cliente (pode ser uma referência a outra tabela)
     Logradouro VARCHAR(100) NOT NULL,    -- Logradouro do endereço
     Numero VARCHAR(10) NOT NULL,         -- Número do endereço

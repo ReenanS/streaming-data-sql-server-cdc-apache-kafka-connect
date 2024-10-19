@@ -3,7 +3,7 @@
     public interface IMessageProcessor
     {
         string ConvertOperation(string operation);
-        //string GetPrimaryKey(KafkaPayload payload, string topic);
+        int GetPrimaryKey(dynamic payload, string topic);
     }
 
 }

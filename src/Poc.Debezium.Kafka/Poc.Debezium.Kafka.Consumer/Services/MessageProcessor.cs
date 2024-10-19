@@ -11,22 +11,23 @@ namespace Worker.Services
                 "c" => "criar",
                 "u" => "atualizar",
                 "d" => "deletar",
+                "r" => "leitura",
                 _ => throw new ArgumentException($"Operação desconhecida: {operation}")
             };
         }
 
-        //public string GetPrimaryKey(KafkaPayload payload, string topic)
-        //{
-        //    // Aqui você pode implementar a lógica para obter a chave primária com base no payload e no tópico.
-        //    // A implementação pode variar dependendo de como suas tabelas estão estruturadas.
+        public int GetPrimaryKey(dynamic payload, string topic)
+        {
+            dynamic data = payload.After ?? payload.Before;
 
-        //    return topic switch
-        //    {
-        //        "CONBE007" => payload.IdConbe007,
-        //        "CONBE008" => payload.IdConbe008,
-        //        _ => throw new ArgumentException($"Tópico desconhecido: {topic}")
-        //    };
-        //}
+            return topic switch
+            {
+                "joaozinho.DBCN502.dbo.CONBE007" => data.ID_CONBE007,
+                "renanzinho.DBCN502.dbo.CONBE008" => data.ID_CONBE008,
+                "tiophon.DBCN502.dbo.CONBE009" => data.ID_CONBE009,
+                _ => throw new ArgumentException($"Tópico {topic} não suportado")
+            };
+        }
     }
 
 }

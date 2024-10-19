@@ -61,22 +61,22 @@ namespace Worker.Services
 
 
                     Console.WriteLine($"Mensagem recebida do tópico {topic}");
-                    //Console.WriteLine($"Mensagem recebida do tópico {topic}: {fixMessage}");
+                    Console.WriteLine($"Mensagem recebida do tópico {topic}: {fixMessage}");
 
                     var kafkaMessage = JsonConvert.DeserializeObject<KafkaMessage>(fixMessage);
-                    if (kafkaMessage?.Payload == null) continue;
+                    //if (kafkaMessage?.payload == null) continue;
 
                     // Usando a classe de processamento de mensagem
-                    string operation = messageProcessor.ConvertOperation(kafkaMessage.Payload.Op);
+                    string operation = messageProcessor.ConvertOperation(kafkaMessage.payload.Op);
 
-                    //int id = messageProcessor.GetPrimaryKey(kafkaMessage.Payload, topic);
+                    int id = messageProcessor.GetPrimaryKey(kafkaMessage.payload, topic);
 
                     string stateMachineArn = kafkaConfiguration.Topics.FirstOrDefault(t => t.Topic == topic)?.StateMachineArn;
 
                     var input = new StepFunctionInput
                     {
                         TipoOperacao = operation,
-                        GroupId = 1,
+                        GroupId = id,
                         StateMachineArn = stateMachineArn // Passa o ARN aqui
                     };
 
@@ -87,10 +87,10 @@ namespace Worker.Services
                         {
                             using var scope = serviceProvider.CreateScope();
 
-                            var sendOperationToStepFunctionAsync = scope.ServiceProvider.GetRequiredService<ISendOperationToStepFunction>();
+                            //var sendOperationToStepFunctionAsync = scope.ServiceProvider.GetRequiredService<ISendOperationToStepFunction>();
 
                             // Chama o Step Function
-                            await sendOperationToStepFunctionAsync.ExecuteAsync(input);
+                            //await sendOperationToStepFunctionAsync.ExecuteAsync(input);
 
                             consumer.Commit(consumeResult);
                         }
