@@ -1,6 +1,7 @@
 ﻿// src/Infrastructure/Services/KafkaConsumerService.cs
 using Application.Commands; // Namespace para o comando
 using Confluent.Kafka;
+using Domain.Interfaces.BackgroundTask;
 using Infra.Configurations;
 using Kafka.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,15 +17,18 @@ namespace Infra.Services
         private readonly IServiceScopeFactory _serviceProvider;
         private readonly KafkaConfiguration _kafkaConfiguration;
         private readonly ILogger<KafkaConsumerService> _logger;
+        private readonly IBackgroundTaskQueue _taskQueue; // Injeta o Task Queue
 
         public KafkaConsumerService(
             IServiceScopeFactory serviceProvider,
             IOptions<KafkaConfiguration> kafkaConfiguration,
-            ILogger<KafkaConsumerService> logger)
+            ILogger<KafkaConsumerService> logger,
+            IBackgroundTaskQueue taskQueue)
         {
             _serviceProvider = serviceProvider;
             _kafkaConfiguration = kafkaConfiguration.Value;
             _logger = logger;
+            _taskQueue = taskQueue; // Atribui TaskQueue
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -72,8 +76,11 @@ namespace Infra.Services
 
                     _logger.LogWarning($"Mensagem {messageCount} recebida do tópico {topic}");
 
-                    // Enviar a mensagem para o comando de processamento
-                    await ProcessKafkaMessage(consumeResult.Message.Value, topic, consumeResult, consumer);
+                    // Adicionar o trabalho à fila de tarefas
+                    _taskQueue.QueueBackgroundWorkItem(async (token) =>
+                    {
+                        await ProcessKafkaMessage(consumeResult.Message.Value, topic, consumeResult, consumer);
+                    });
                 }
                 catch (ConsumeException e)
                 {
