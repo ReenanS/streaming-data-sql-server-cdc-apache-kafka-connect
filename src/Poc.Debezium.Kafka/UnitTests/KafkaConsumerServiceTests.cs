@@ -13,14 +13,14 @@ namespace UnitTests
         private readonly Mock<IBackgroundTaskQueue> mockTaskQueue;
         private readonly Mock<IServiceScopeFactory> mockServiceScopeFactory;
         private readonly Mock<IOptions<KafkaConfiguration>> mockKafkaConfigOptions;
-        private readonly Mock<IMessageRepository> mockMessageProcessor;
+        private readonly Mock<IMessageProcessor> mockMessageProcessor;
 
         public KafkaConsumerServiceTests()
         {
             mockTaskQueue = new Mock<IBackgroundTaskQueue>();
             mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
             mockKafkaConfigOptions = new Mock<IOptions<KafkaConfiguration>>();
-            mockMessageProcessor = new Mock<IMessageRepository>();
+            mockMessageProcessor = new Mock<IMessageProcessor>();
         }
 
         private KafkaConsumerService CreateService(KafkaConfiguration kafkaConfiguration)

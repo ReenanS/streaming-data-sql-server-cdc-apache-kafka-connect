@@ -1,6 +1,6 @@
 ﻿namespace Domain.Interfaces
 {
-    public interface IMessageRepository
+    public interface IMessageProcessor
     {
         string ConvertOperation(string operation);
         int GetPrimaryKey(dynamic payload, string topic);

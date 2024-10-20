@@ -2,7 +2,7 @@
 
 namespace Infra.Services
 {
-    public class MessageProcessor : IMessageRepository
+    public class MessageProcessor : IMessageProcessor
     {
         public string ConvertOperation(string operation)
         {
