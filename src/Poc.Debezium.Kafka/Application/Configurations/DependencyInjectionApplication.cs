@@ -2,11 +2,11 @@
 using Domain.UseCases;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Domain.Configurations
+namespace Application.Configurations
 {
-    public static class DependencyInjectionDomain
+    public static class DependencyInjectionApplication
     {
-        public static IServiceCollection AddDomain(this IServiceCollection services)
+        public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<ISendOperationToStepFunction, SendOperationToStepFunction>();
             return services;

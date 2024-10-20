@@ -6,6 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="C:\Users\renan\.nuget\packages\librdkafka.redist\2.6.0\build\..\runtimes\win-x64\native\**" />
+    <Content Remove="C:\Users\renan\.nuget\packages\librdkafka.redist\2.6.0\build\..\runtimes\win-x86\native\**" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="librdkafka.redist" Version="2.6.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.1" />

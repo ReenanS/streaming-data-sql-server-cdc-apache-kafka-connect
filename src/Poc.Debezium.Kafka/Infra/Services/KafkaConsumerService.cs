@@ -1,25 +1,28 @@
 ﻿using Confluent.Kafka;
+using Domain.Interfaces;
 using Domain.Interfaces.BackgroundTask;
+using Domain.Interfaces.UseCases;
 using Domain.Models;
-using Kafka.Configuration;
+using Infra.Configurations;
 using Kafka.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Worker.Interfaces;
 
-namespace Worker.Services
+namespace Infra.Services
 {
     public class KafkaConsumerService : BackgroundService
     {
         private readonly IBackgroundTaskQueue taskQueue;
         private readonly IServiceScopeFactory serviceProvider;
         private readonly KafkaConfiguration kafkaConfiguration;
-        private readonly IMessageProcessor messageProcessor;
+        private readonly IMessageRepository messageProcessor;
 
         public KafkaConsumerService(IServiceScopeFactory serviceProvider,
             IBackgroundTaskQueue taskQueue,
             IOptions<KafkaConfiguration> kafkaConfiguration,
-            IMessageProcessor messageProcessor)
+            IMessageRepository messageProcessor)
         {
             this.taskQueue = taskQueue;
             this.serviceProvider = serviceProvider;
@@ -135,8 +138,8 @@ namespace Worker.Services
                             try
                             {
                                 using var scope = serviceProvider.CreateScope();
-                                //var sendOperationToStepFunctionAsync = scope.ServiceProvider.GetRequiredService<ISendOperationToStepFunction>();
-                                //await sendOperationToStepFunctionAsync.ExecuteAsync(input);
+                                var sendOperationToStepFunctionAsync = scope.ServiceProvider.GetRequiredService<ISendOperationToStepFunction>();
+                                await sendOperationToStepFunctionAsync.ExecuteAsync(input);
 
                                 // Commit manual após processar a mensagem com sucesso
                                 consumer.Commit(consumeResult);

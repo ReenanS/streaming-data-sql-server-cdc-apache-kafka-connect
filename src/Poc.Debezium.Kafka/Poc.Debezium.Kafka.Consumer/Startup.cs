@@ -1,16 +1,15 @@
 ﻿using Amazon.StepFunctions;
+using Application.Configurations;
 using Confluent.Kafka;
-using Domain.Configurations;
+using Domain.Interfaces;
 using Infra.Configurations;
-using Kafka.Configuration;
+using Infra.Services;
 using LocalStack.Client.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using Worker.BackgroundTask;
 using Worker.Configurations;
-using Worker.Interfaces;
-using Worker.Services;
 
 namespace Worker
 {
@@ -41,7 +40,7 @@ namespace Worker
             services.AddInfra()
                 .AddKafka(Configuration)
                 .AddWorker()
-                .AddDomain();
+                .AddApplication();
 
             // Configuração do Kafka Consumer
             services.AddSingleton<IConsumer<string, string>>(provider =>
@@ -68,7 +67,7 @@ namespace Worker
             //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies);
             //services.AddHealthCheckService();
 
-            services.AddSingleton<IMessageProcessor, MessageProcessor>();
+            services.AddSingleton<IMessageRepository, MessageProcessor>();
 
         }
 

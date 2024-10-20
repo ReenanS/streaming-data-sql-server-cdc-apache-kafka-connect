@@ -31,12 +31,13 @@
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Infra\Infra.csproj" />
-    <ProjectReference Include="..\Kafka\Kafka.csproj" />
-    <ProjectReference Include="..\Poc.Debezium.Kafka.Consumer\Worker.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Application\Application.csproj" />
+	  <ProjectReference Include="..\Domain\Domain.csproj" />
+	  <ProjectReference Include="..\Infra\Infra.csproj" />
+	  <ProjectReference Include="..\Poc.Debezium.Kafka.Consumer\Worker.csproj" />
+	</ItemGroup>
+
 
   <ItemGroup>
     <Using Include="Xunit" />

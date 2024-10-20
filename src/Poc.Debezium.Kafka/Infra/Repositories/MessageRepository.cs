@@ -1,8 +1,8 @@
-﻿using Worker.Interfaces;
+﻿using Domain.Interfaces;
 
-namespace Worker.Services
+namespace Infra.Repositories
 {
-    public class MessageProcessor : IMessageProcessor
+    public class MessageRepository : IMessageRepository
     {
         public string ConvertOperation(string operation)
         {
@@ -29,5 +29,4 @@ namespace Worker.Services
             };
         }
     }
-
 }

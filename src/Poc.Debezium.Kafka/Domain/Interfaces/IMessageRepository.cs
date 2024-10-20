@@ -1,9 +1,8 @@
-﻿namespace Worker.Interfaces
+﻿namespace Domain.Interfaces
 {
-    public interface IMessageProcessor
+    public interface IMessageRepository
     {
         string ConvertOperation(string operation);
         int GetPrimaryKey(dynamic payload, string topic);
     }
-
 }

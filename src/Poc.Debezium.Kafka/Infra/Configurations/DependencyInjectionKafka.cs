@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Kafka.Configuration
+namespace Infra.Configurations
 {
     public static class DependencyInjectionKafka
     {
