@@ -1,5 +1,4 @@
 ﻿using Amazon.StepFunctions;
-using Application.Commands;
 using Application.Configurations;
 using Confluent.Kafka;
 using Domain.Interfaces;
@@ -70,9 +69,6 @@ namespace Worker
 
             services.AddSingleton<IMessageProcessor, MessageProcessor>();
 
-            // Registrar seus handlers específicos
-            services.AddTransient<ProcessKafkaMessageCommandHandler>();
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -83,25 +79,6 @@ namespace Worker
             }
 
             //app.RegisterHealthCheck();
-
-            // Dentro do método Configure
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var serviceProvider = scope.ServiceProvider;
-                var logger = serviceProvider.GetRequiredService<ILogger<Startup>>();
-
-                var handler = serviceProvider.GetService<ProcessKafkaMessageCommandHandler>();
-
-                if (handler == null)
-                {
-                    logger.LogError("ProcessKafkaMessageCommandHandler não está registrado.");
-                    throw new InvalidOperationException("ProcessKafkaMessageCommandHandler não está registrado.");
-                }
-                else
-                {
-                    logger.LogInformation("ProcessKafkaMessageCommandHandler foi registrado com sucesso.");
-                }
-            }
 
         }
     }

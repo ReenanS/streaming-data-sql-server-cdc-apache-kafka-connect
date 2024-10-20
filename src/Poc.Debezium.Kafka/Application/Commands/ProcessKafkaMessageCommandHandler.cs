@@ -27,12 +27,11 @@ namespace Application.Commands
             var input = new StepFunctionInput
             {
                 TipoOperacao = operation,
-                CodigoExterno = id,
-                StateMachineArn = "TESTE RENANZINHO" // Obter do comando ou de outro lugar
+                CodigoExterno = id
             };
 
             // Enviar para a Step Function
-            //await _sendOperationToStepFunction.ExecuteAsync(input);
+            await _sendOperationToStepFunction.ExecuteAsync(input, command.Topic);
         }
     }
 }

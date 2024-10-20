@@ -1,5 +1,4 @@
-﻿using Domain.Interfaces.UseCases;
-using Domain.UseCases;
+﻿using Application.Commands;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Configurations
@@ -8,7 +7,8 @@ namespace Application.Configurations
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<ISendOperationToStepFunction, SendOperationToStepFunction>();
+            // Registrar seus handlers específicos
+            services.AddTransient<ProcessKafkaMessageCommandHandler>();
             return services;
         }
     }

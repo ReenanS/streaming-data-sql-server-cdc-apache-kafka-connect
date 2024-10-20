@@ -4,6 +4,6 @@ namespace Domain.Interfaces.UseCases
 {
     public interface ISendOperationToStepFunction
     {
-        Task ExecuteAsync(StepFunctionInput input);
+        Task ExecuteAsync(StepFunctionInput input, string topic);
     }
 }

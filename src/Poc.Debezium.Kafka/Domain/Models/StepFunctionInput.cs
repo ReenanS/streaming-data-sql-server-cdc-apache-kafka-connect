@@ -4,6 +4,5 @@
     {
         public string TipoOperacao { get; set; }
         public int CodigoExterno { get; set; }
-        public string StateMachineArn { get; set; }
     }
 }
