@@ -50,18 +50,27 @@ namespace Infra.Services
         private async Task ConsumeFromTopic(ConsumerConfig config, string topic, CancellationToken stoppingToken)
         {
             using var consumer = new ConsumerBuilder<string, string>(config).Build();
+
             consumer.Subscribe(topic);
+
+            int messageCount = 0;
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
                     var consumeResult = consumer.Consume(stoppingToken);
+
+                    // Verificação de nulidade
                     if (consumeResult?.Message == null || string.IsNullOrEmpty(consumeResult.Message.Value))
                     {
                         _logger.LogWarning($"Mensagem vazia ou nula recebida do tópico {topic}, ignorando...");
                         continue;
                     }
+
+                    messageCount++;
+
+                    _logger.LogWarning($"Mensagem {messageCount} recebida do tópico {topic}");
 
                     // Enviar a mensagem para o comando de processamento
                     await ProcessKafkaMessage(consumeResult.Message.Value, topic, consumeResult, consumer);

@@ -32,7 +32,7 @@ namespace Application.Commands
             };
 
             // Enviar para a Step Function
-            await _sendOperationToStepFunction.ExecuteAsync(input);
+            //await _sendOperationToStepFunction.ExecuteAsync(input);
         }
     }
 }
