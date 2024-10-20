@@ -3,6 +3,7 @@ using Domain.Interfaces.BackgroundTask;
 using Infra.Configurations;
 using Infra.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 
@@ -13,20 +14,20 @@ namespace UnitTests
         private readonly Mock<IBackgroundTaskQueue> mockTaskQueue;
         private readonly Mock<IServiceScopeFactory> mockServiceScopeFactory;
         private readonly Mock<IOptions<KafkaConfiguration>> mockKafkaConfigOptions;
-        private readonly Mock<IMessageProcessor> mockMessageProcessor;
+        private readonly Mock<ILogger<KafkaConsumerService>> mockLogger;
 
         public KafkaConsumerServiceTests()
         {
             mockTaskQueue = new Mock<IBackgroundTaskQueue>();
             mockServiceScopeFactory = new Mock<IServiceScopeFactory>();
             mockKafkaConfigOptions = new Mock<IOptions<KafkaConfiguration>>();
-            mockMessageProcessor = new Mock<IMessageProcessor>();
+            mockLogger = new Mock<ILogger<KafkaConsumerService>>();
         }
 
         private KafkaConsumerService CreateService(KafkaConfiguration kafkaConfiguration)
         {
             mockKafkaConfigOptions.Setup(m => m.Value).Returns(kafkaConfiguration);
-            return new KafkaConsumerService(mockServiceScopeFactory.Object, mockTaskQueue.Object, mockKafkaConfigOptions.Object, mockMessageProcessor.Object);
+            return new KafkaConsumerService(mockServiceScopeFactory.Object, mockKafkaConfigOptions.Object, mockLogger.Object, mockTaskQueue.Object);
         }
 
         [Fact]
