@@ -8,7 +8,7 @@
                {
                   "type":"int32",
                   "optional":false,
-                  "field":"ID"
+                  "field":"ID_CONBE007"
                },
                {
                   "type":"string",
@@ -36,7 +36,7 @@
                {
                   "type":"int32",
                   "optional":false,
-                  "field":"ID"
+                  "field":"ID_CONBE007"
                },
                {
                   "type":"string",
@@ -173,28 +173,28 @@
    },
    "payload":{
       "before":{
-         "ID_CONBE007":7,
-         "Nome":"TESTE KAFKA",
-         "Sobrenome":"TESTE",
-         "Email":"3"
+         "ID_CONBE007":5,
+         "Nome":"João",
+         "Sobrenome":"Silva",
+         "Email":"joao.silva@example.com"
       },
       "after":null,
       "source":{
          "version":"2.5.0.Final",
          "connector":"sqlserver",
          "name":"joaozinho",
-         "ts_ms":1729293620100,
+         "ts_ms":1729440136107,
          "snapshot":"false",
          "db":"DBCN502",
          "sequence":null,
          "schema":"dbo",
          "table":"CONBE007",
-         "change_lsn":"0000002a:000009c0:0002",
-         "commit_lsn":"0000002a:000009c0:0003",
+         "change_lsn":"0000002b:000008c8:0002",
+         "commit_lsn":"0000002b:000008c8:0005",
          "event_serial_no":1
       },
       "op":"d",
-      "ts_ms":1729293621656,
+      "ts_ms":1729440138156,
       "transaction":null
    }
 }

@@ -39,7 +39,8 @@ namespace Worker.Services
                 {
                     BootstrapServers = kafkaConfiguration.BootstrapServers,
                     GroupId = topicConfig.GroupId,
-                    AutoOffsetReset = AutoOffsetReset.Earliest
+                    AutoOffsetReset = AutoOffsetReset.Earliest,
+                    EnableAutoCommit = false // Desativa AutoCommit
                 };
 
                 // Iniciar a tarefa de consumo para cada tópico
@@ -49,10 +50,19 @@ namespace Worker.Services
 
         private async Task ConsumeFromTopic(ConsumerConfig config, string topic, CancellationToken stoppingToken)
         {
-            using var consumer = new ConsumerBuilder<string, string>(config).Build();
+            using var consumer = new ConsumerBuilder<string, string>(config)
+                .SetPartitionsAssignedHandler((c, partitions) =>
+                {
+                    Console.WriteLine($"Partições atribuídas: [{string.Join(", ", partitions)}]");
+                })
+                .SetPartitionsRevokedHandler((c, partitions) =>
+                {
+                    Console.WriteLine($"Partições revogadas: [{string.Join(", ", partitions)}]");
+                })
+                .Build();
+
             consumer.Subscribe(topic);
 
-            // Inicializando o contador de mensagens
             int messageCount = 0;
 
             while (!stoppingToken.IsCancellationRequested)
@@ -60,20 +70,21 @@ namespace Worker.Services
                 try
                 {
                     var consumeResult = consumer.Consume(stoppingToken);
-                    var fixMessage = consumeResult?.Message?.Value;
 
-                    // Verificar se a mensagem não é nula
-                    if (string.IsNullOrEmpty(fixMessage))
+                    // Verificação de nulidade
+                    if (consumeResult?.Message == null || string.IsNullOrEmpty(consumeResult.Message.Value))
                     {
                         Console.WriteLine($"Mensagem vazia ou nula recebida do tópico {topic}, ignorando...");
                         continue;
                     }
 
+                    var fixMessage = consumeResult.Message.Value;
+
                     // Incrementa o contador de mensagens recebidas
                     messageCount++;
                     Console.WriteLine($"Mensagem {messageCount} recebida do tópico {topic}");
 
-                    // Deserializar a mensagem Kafka, com verificação de nulidade no KafkaMessage
+                    // Deserializar a mensagem Kafka
                     var kafkaMessage = JsonConvert.DeserializeObject<KafkaMessage>(fixMessage);
                     if (kafkaMessage?.payload == null)
                     {
@@ -81,7 +92,7 @@ namespace Worker.Services
                         continue;
                     }
 
-                    // Verificar a operação e os objetos Before/After de acordo com a operação
+                    // Lógica para obter a operação e validar Before/After para DELETE
                     var operation = messageProcessor.ConvertOperation(kafkaMessage.payload.Op);
 
                     if (operation == "c" || operation == "u")
@@ -103,6 +114,7 @@ namespace Worker.Services
 
                     int id = messageProcessor.GetPrimaryKey(kafkaMessage.payload, topic);
 
+                    // Obter o ARN da StateMachine associado ao tópico
                     string stateMachineArn = kafkaConfiguration.Topics.FirstOrDefault(t => t.Topic == topic)?.StateMachineArn;
 
                     var input = new StepFunctionInput
@@ -112,11 +124,11 @@ namespace Worker.Services
                         StateMachineArn = stateMachineArn
                     };
 
-                    // Adicionar trabalho à fila de tarefas
+                    // Adicionar trabalho à fila de tarefas com mecanismo de retry
                     taskQueue.QueueBackgroundWorkItem(async (token) =>
                     {
-                        int maxRetries = 3; // número máximo de tentativas
-                        int delayBetweenRetries = 2000; // tempo de espera entre tentativas em milissegundos
+                        int maxRetries = 3;
+                        int delayBetweenRetries = 2000;
                         bool success = false;
 
                         for (int attempt = 1; attempt <= maxRetries; attempt++)
@@ -126,22 +138,22 @@ namespace Worker.Services
                                 using var scope = serviceProvider.CreateScope();
                                 //var sendOperationToStepFunctionAsync = scope.ServiceProvider.GetRequiredService<ISendOperationToStepFunction>();
                                 //await sendOperationToStepFunctionAsync.ExecuteAsync(input);
+
+                                // Commit manual após processar a mensagem com sucesso
                                 consumer.Commit(consumeResult);
-                                success = true; // sucesso ao processar a mensagem
-                                break; // sai do loop se a mensagem for processada com sucesso
+                                success = true;
+                                break;
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine($"Erro ao processar mensagem (tentativa {attempt}): {ex.Message}");
 
-                                // Se não for a última tentativa, aguarda antes de tentar novamente
                                 if (attempt < maxRetries)
                                 {
                                     await Task.Delay(delayBetweenRetries, token);
                                 }
                                 else
                                 {
-                                    // Lógica de falha após todas as tentativas (opcional)
                                     Console.WriteLine("Todas as tentativas falharam. Considerando a mensagem como não processada.");
                                 }
                             }
@@ -151,18 +163,18 @@ namespace Worker.Services
                 catch (ConsumeException e)
                 {
                     Console.WriteLine($"Erro ao consumir mensagem do tópico {topic}: {e.Error.Reason}");
-                    await Task.Delay(1000, stoppingToken); // Espera um pouco antes de tentar novamente
+                    await Task.Delay(1000, stoppingToken);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Erro inesperado: {ex.Message}");
-                    await Task.Delay(1000, stoppingToken); // Espera um pouco antes de tentar novamente
+                    await Task.Delay(1000, stoppingToken);
                 }
             }
 
-            // Exibir o total de mensagens processadas (opcional)
             Console.WriteLine($"Total de mensagens recebidas do tópico {topic}: {messageCount}");
         }
+
 
 
     }
