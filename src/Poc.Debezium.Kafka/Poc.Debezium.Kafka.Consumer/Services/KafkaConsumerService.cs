@@ -1,6 +1,5 @@
 ﻿using Confluent.Kafka;
 using Domain.Interfaces.BackgroundTask;
-using Domain.Interfaces.UseCases;
 using Domain.Models;
 using Kafka.Configuration;
 using Kafka.Models;
