@@ -4,7 +4,6 @@ using Domain.Interfaces.UseCases;
 using Domain.Models;
 using Infra.Configurations;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using System.Text.Json;
 
 namespace Infra.Services

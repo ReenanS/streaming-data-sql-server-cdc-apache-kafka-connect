@@ -1,4 +1,3 @@
-using Domain.Interfaces;
 using Domain.Interfaces.BackgroundTask;
 using Infra.Configurations;
 using Infra.Services;

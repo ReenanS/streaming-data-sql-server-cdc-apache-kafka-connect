@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests.Application.Commands
+﻿namespace UnitTests.Application.Commands
 {
-    using Application.Commands;
     using Domain.Interfaces;
     using Domain.Interfaces.UseCases;
     using Domain.Models;
