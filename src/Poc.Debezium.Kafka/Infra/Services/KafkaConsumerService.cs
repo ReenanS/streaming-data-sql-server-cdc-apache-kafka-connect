@@ -83,7 +83,7 @@ namespace Infra.Services
                         // Adicionar o trabalho à fila de tarefas
                         _taskQueue.QueueBackgroundWorkItem(async (token) =>
                         {
-                            await ProcessKafkaMessage(consumeResult.Message.Value, topic, consumeResult, consumer);
+                            await ProcessKafkaMessage(consumeResult.Message.Value, topic, consumeResult, consumer, token);
                         });
                     }
                     catch (ConsumeException e)
@@ -104,7 +104,7 @@ namespace Infra.Services
 
         }
 
-        private async Task ProcessKafkaMessage(string messageValue, string topic, ConsumeResult<string, string> consumeResult, IConsumer<string, string> consumer)
+        private async Task ProcessKafkaMessage(string messageValue, string topic, ConsumeResult<string, string> consumeResult, IConsumer<string, string> consumer, CancellationToken cancellationToken)
         {
             // Deserializar a mensagem Kafka
             var kafkaMessage = JsonConvert.DeserializeObject<KafkaMessage>(messageValue);
@@ -118,7 +118,7 @@ namespace Infra.Services
             var commandHandler = scope.ServiceProvider.GetRequiredService<ProcessKafkaMessageCommandHandler>();
             var command = new ProcessKafkaMessageCommand(kafkaMessage, topic);
 
-            await commandHandler.Handle(command, default);
+            await commandHandler.Handle(command, cancellationToken);
 
             // Commit manual após processar a mensagem com sucesso
             try
