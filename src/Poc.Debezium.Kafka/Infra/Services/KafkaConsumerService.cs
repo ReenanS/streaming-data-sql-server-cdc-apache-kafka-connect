@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Polly;
 
 namespace Infra.Services
 {
@@ -108,7 +109,8 @@ namespace Infra.Services
         {
             // Deserializar a mensagem Kafka
             var kafkaMessage = JsonConvert.DeserializeObject<KafkaMessage>(messageValue);
-            if (kafkaMessage?.payload == null)
+
+            if (!ValidateKafkaMessage(kafkaMessage))
             {
                 _logger.LogWarning("Payload nulo, ignorando a mensagem...");
                 return;
@@ -118,18 +120,18 @@ namespace Infra.Services
             var commandHandler = scope.ServiceProvider.GetRequiredService<ProcessKafkaMessageCommandHandler>();
             var command = new ProcessKafkaMessageCommand(kafkaMessage, topic);
 
-            await commandHandler.Handle(command, cancellationToken);
+            await Policy.Handle<Exception>()
+                        .RetryAsync(3)
+                        .ExecuteAsync(async () => await commandHandler.Handle(command, cancellationToken));
 
             // Commit manual após processar a mensagem com sucesso
-            try
-            {
-                consumer.Commit(consumeResult);
-                _logger.LogInformation($"Mensagem comitada com sucesso para o tópico {topic}");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Erro ao comitar a mensagem para o tópico {topic}: {ex.Message}");
-            }
+            consumer.Commit(consumeResult);
+            _logger.LogInformation($"Mensagem comitada com sucesso para o tópico {topic}");
+        }
+
+        private bool ValidateKafkaMessage(KafkaMessage kafkaMessage)
+        {
+            return kafkaMessage?.payload != null;
         }
 
     }
