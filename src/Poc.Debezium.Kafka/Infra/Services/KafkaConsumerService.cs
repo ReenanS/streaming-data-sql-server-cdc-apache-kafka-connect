@@ -38,59 +38,70 @@ namespace Infra.Services
             // Criar um consumidor para cada tópico na configuração
             foreach (var topicConfig in _kafkaConfiguration.Topics)
             {
-                var consumerConfig = new ConsumerConfig
-                {
-                    BootstrapServers = _kafkaConfiguration.BootstrapServers,
-                    GroupId = topicConfig.GroupId,
-                    AutoOffsetReset = AutoOffsetReset.Earliest,
-                    EnableAutoCommit = false // Desativa AutoCommit
-                };
+                var consumerConfig = InitializeKafkaConfiguration(topicConfig);
 
                 // Iniciar a tarefa de consumo para cada tópico
                 _ = Task.Run(() => ConsumeFromTopic(consumerConfig, topicConfig.Topic, stoppingToken), stoppingToken);
             }
         }
 
+        private ConsumerConfig InitializeKafkaConfiguration(TopicConfig topicConfig)
+        {
+            return new ConsumerConfig
+            {
+                BootstrapServers = _kafkaConfiguration.BootstrapServers,
+                GroupId = topicConfig.GroupId,
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                EnableAutoCommit = false // Desativa AutoCommit
+            };
+        }
+
         private async Task ConsumeFromTopic(ConsumerConfig config, string topic, CancellationToken stoppingToken)
         {
             using var consumer = new ConsumerBuilder<string, string>(config).Build();
 
-            consumer.Subscribe(topic);
-
-            int messageCount = 0;
-
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                try
-                {
-                    var consumeResult = consumer.Consume(stoppingToken);
+                consumer.Subscribe(topic);
+                _logger.LogInformation($"Assinado com sucesso no tópico {topic}");
 
-                    // Verificação de nulidade
-                    if (consumeResult?.Message == null || string.IsNullOrEmpty(consumeResult.Message.Value))
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    try
                     {
-                        _logger.LogWarning($"Mensagem vazia ou nula recebida do tópico {topic}, ignorando...");
-                        continue;
+                        var consumeResult = consumer.Consume(stoppingToken);
+
+                        // Verificação de nulidade
+                        if (consumeResult?.Message == null || string.IsNullOrEmpty(consumeResult.Message.Value))
+                        {
+                            _logger.LogWarning($"Mensagem vazia ou nula recebida do tópico {topic}, ignorando...");
+                            continue;
+                        }
+
+                        _logger.LogInformation($"Mensagem recebida do tópico {topic}");
+
+                        // Adicionar o trabalho à fila de tarefas
+                        _taskQueue.QueueBackgroundWorkItem(async (token) =>
+                        {
+                            await ProcessKafkaMessage(consumeResult.Message.Value, topic, consumeResult, consumer);
+                        });
                     }
-
-                    messageCount++;
-
-                    _logger.LogWarning($"Mensagem {messageCount} recebida do tópico {topic}");
-
-                    // Adicionar o trabalho à fila de tarefas
-                    _taskQueue.QueueBackgroundWorkItem(async (token) =>
+                    catch (ConsumeException e)
                     {
-                        await ProcessKafkaMessage(consumeResult.Message.Value, topic, consumeResult, consumer);
-                    });
-                }
-                catch (ConsumeException e)
-                {
-                    _logger.LogError($"Erro ao consumir mensagem do tópico {topic}: {e.Error.Reason}");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"Erro inesperado: {ex.Message}");
+                        _logger.LogError($"Erro ao consumir mensagem do tópico {topic}: {e.Error.Reason}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Erro inesperado: {ex.Message}");
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Erro ao consumir do tópico {topic}: {ex.Message}");
+                // Implementar estratégia de retry (opcional)
+            }
+
         }
 
         private async Task ProcessKafkaMessage(string messageValue, string topic, ConsumeResult<string, string> consumeResult, IConsumer<string, string> consumer)
@@ -110,7 +121,16 @@ namespace Infra.Services
             await commandHandler.Handle(command, default);
 
             // Commit manual após processar a mensagem com sucesso
-            consumer.Commit(consumeResult);
+            try
+            {
+                consumer.Commit(consumeResult);
+                _logger.LogInformation($"Mensagem comitada com sucesso para o tópico {topic}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Erro ao comitar a mensagem para o tópico {topic}: {ex.Message}");
+            }
         }
+
     }
 }
